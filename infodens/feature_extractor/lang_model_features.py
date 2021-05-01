@@ -235,6 +235,89 @@ class Lang_model_features(Feature_extractor):
                 output = sparse.lil_matrix(probab)
                 return output
 
+    @featid(81)
+    def backwardLangModelPOSFeat(self, argString, preprocessReq=0):
+        '''
+        Extracts n-gram POS language model preplexity features.
+        '''
+        ngramOrder = 3
+        langModel = ""
+        taggedInput = ""
+        taggedCorpus = ""
+        # TaggedInput1/0,LM0/1,taggedCorpus0/1,ngramOrder(,TaggedPOSfile(ifTaggedInp1),
+        # LMFilePath(ifLM1),taggedCorpus(if LM0&TaggedCorpus1))
+        arguments = argString.split(',')
+        if int(arguments[0]):
+            # Use file of tagged sents (last argument)
+            taggedInput = "\"{0}\"".format(arguments[4])
+        if int(arguments[1]):
+            # Next argument
+            langModel = "\"{0}\"".format(arguments[4+int(arguments[0])])
+        elif int(arguments[2]):
+            taggedCorpus = "\"{0}\"".format(arguments[4+int(arguments[0])])
+
+        ngramOrder = int(arguments[3])
+
+        if preprocessReq:
+            # Request all preprocessing functions to be prepared
+            if not taggedInput:
+                taggedInput = self.prep_servs.dumpTokensTofile(
+                                            dumpFile="{0}_tagged_Input.txt".format(self.preprocessor.getInputFileName()),
+                                                 tokenSents=self.preprocessor.getPOStagged())
+            if not langModel:
+                if not taggedCorpus:
+                    taggedCorpus = self.prep_servs.dumpTokensTofile(
+                                        dumpFile="{0}_tagged_Corpus.txt".format(self.preprocessor.getCorpusLMName()),
+                                                     tokenSents=self.prep_servs.tagPOSfromFile(
+                                                         self.preprocessor.getCorpusLMName()
+                                                     ))
+
+                # If tagged corpus is empty, just use
+                langModel = self.preprocessor.buildBackwardLanguageModel(ngramOrder, taggedCorpus, False)
+
+            return 1
+
+        if not taggedInput:
+            taggedInput = "{0}_tagged_Input.txt".format(self.preprocessor.getInputFileName())
+        if not langModel:
+            if not taggedCorpus:
+                taggedCorpus = "{0}_tagged_Corpus.txt".format(self.preprocessor.getCorpusLMName())
+            langModel = self.preprocessor.buildBackwardLanguageModel(ngramOrder, taggedCorpus, False)
+
+        srilmBinary, kenlm = self.preprocessor.getBinariesPath()
+
+        if srilmBinary and not kenlm:
+            pplFile = "tempLang{0}_reversed_{1}.ppl".format(os.path.basename(taggedInput[1:-1]), ngramOrder)
+                                                                       # strip the quotes from the taggedInput filename
+                                                                       # so that os.path.basename works correctly
+
+            command = "\"{0}ngram\" -order {1} -lm {2} -ppl {3} -debug 1 -unk -reverse > {4}".format(srilmBinary, ngramOrder,
+                                                                                           langModel, taggedInput, pplFile)
+
+            subprocess.call(command, shell=True)
+            probab = self.extractValues(pplFile, self.preprocessor.getSentCount())
+            os.remove(pplFile)
+            return sparse.lil_matrix(probab)
+        else:
+            try:
+                __import__('imp').find_module('kenlm')
+                import kenlm
+                model = kenlm.Model(langModel)
+                probab = []
+                for sent in self.preprocessor.getPOStagged():
+                    probab.append([model.score(sent, bos=True, eos=True),
+                                   model.perplexity(sent)])
+                output = sparse.lil_matrix(probab)
+                return output
+            except ImportError:
+                import pynlpl.lm.lm as pineApple
+                arpaLM = pineApple.ARPALanguageModel(langModel)
+                probab = []
+                for sent in self.preprocessor.getPOStagged():
+                    probab.append([arpaLM.score(sent)])
+                output = sparse.lil_matrix(probab)
+                return output
+
     def getSplits(self, counts, sumcounts, splitCount):
         splits = []
         tmpsum = 0
