@@ -104,6 +104,41 @@ class Preprocess:
             self.prep_servs.languageModelBuilder(ngram, corpus, langModelFile, kndiscount=discounting)
             self.langModelFiles.append(langModelFile)
 
+    def buildBackwardLanguageModel(self, ngram=3, corpus="", discounting=True):
+        """Build a language model from given corpus."""
+
+        if corpus:
+            # find its reversed version
+            corpus = "".join(os.path.splitext(corpus)[:-1]) + "_reversed" \
+                                              + os.path.splitext(corpus)[-1]
+
+        if not self.corpusForLM and not corpus:
+            print("Corpus for Language model not defined.")
+            return 0
+        elif self.corpusForLM and not corpus:
+            reversedCorpusForLM = "".join(os.path.splitext(self.corpusForLM)[:-1]) + "_reversed" \
+                                              + os.path.splitext(self.corpusForLM)[-1]
+            testCWDCorpus = "{0}{1}".format(os.path.join(os.getcwd(), ''), reversedCorpusForLM)
+            if os.path.isfile(testCWDCorpus):
+                # File in CWD, add directory to path
+                corpus = testCWDCorpus
+            else:
+                # Use as is
+                corpus = reversedCorpusForLM
+
+        # remove any quotes
+        corpus = corpus.replace("\"", "")
+        langModelFile = "{0}_langModel{1}.lm".format(os.path.basename(corpus), ngram)
+        # Wrap to handle spaces in path
+        if not corpus.endswith("\""):
+            corpus = "\"{0}\"".format(corpus)
+
+        if langModelFile not in self.langModelFiles:
+            self.prep_servs.languageModelBuilder(ngram, corpus, langModelFile, kndiscount=discounting)
+            self.langModelFiles.append(langModelFile)
+        else:
+            print(langModelFile)
+
         return langModelFile
 
     def getPOStagged(self, filePOS=""):
