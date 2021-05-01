@@ -48,9 +48,18 @@ class Classifier(object):
         self.X, self.y = sklearn.utils.shuffle(self.X, self.y)
         
     def splitTrainTest(self):
-        self.Xtrain, self.Xtest, self.ytrain, self.ytest = model_selection.train_test_split(self.X, self.y,
-                                                                                            test_size=self.splitPercent,
-                                                                                            random_state=0)
+        #self.Xtrain, self.Xtest, self.ytrain, self.ytest = model_selection.train_test_split(self.X, self.y,
+        #                                                                                    test_size=self.splitPercent,
+        #                                                                                    random_state=0)
+
+
+        # Use a predefined train-test boundary (train includes val too)
+        # len_train + len_val
+        train_test_boundary = 35846
+        self.Xtrain = self.X[:train_test_boundary]
+        self.Xtest = self.X[train_test_boundary:]
+        self.ytrain = self.y[:train_test_boundary]
+        self.ytest = self.y[train_test_boundary:]
 
     def predict(self):
         return self.model.predict(self.Xtest)
