@@ -74,7 +74,7 @@ class Classifier(object):
         acc = []; pre = []; rec = []; fsc = []
 
         for i in range(self.n_foldCV):
-            self.shuffle()
+            #self.shuffle()
             self.splitTrainTest()
             self.train()
             accu, prec, reca, fsco = self.evaluate()
