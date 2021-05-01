@@ -86,7 +86,7 @@ class Surprisal_features(Feature_extractor):
             subprocess.call(command, shell=True)
             probab = self.extractValues(pplFile, self.preprocessor.getSentCount())
             os.remove(pplFile)
-            return sparse.lil_matrix(probab)
+            return sparse.lil_matrix(probab).T # transpose to (num_sent,1) for stacking with other features
         else:
             try:
                 __import__('imp').find_module('kenlm')
@@ -173,7 +173,7 @@ class Surprisal_features(Feature_extractor):
             subprocess.call(command, shell=True)
             probab = self.extractValues(pplFile, self.preprocessor.getSentCount())
             os.remove(pplFile)
-            return sparse.lil_matrix(probab)
+            return sparse.lil_matrix(probab).T # transpose to (num_sent,1) for stacking with other features
         else:
             try:
                 __import__('imp').find_module('kenlm')
