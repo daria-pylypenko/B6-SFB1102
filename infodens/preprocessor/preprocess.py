@@ -103,6 +103,10 @@ class Preprocess:
         if langModelFile not in self.langModelFiles:
             self.prep_servs.languageModelBuilder(ngram, corpus, langModelFile, kndiscount=discounting)
             self.langModelFiles.append(langModelFile)
+        else:
+            print(langModelFile)
+
+        return langModelFile
 
     def buildBackwardLanguageModel(self, ngram=3, corpus="", discounting=True):
         """Build a language model from given corpus."""
