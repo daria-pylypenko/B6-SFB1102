@@ -163,7 +163,9 @@ class Surprisal_features(Feature_extractor):
         srilmBinary, kenlm = self.preprocessor.getBinariesPath()
 
         if srilmBinary and not kenlm:
-            pplFile = "tempLang{0}{1}.ppl".format(os.path.basename(taggedInput), ngramOrder)
+            pplFile = "tempLang{0}{1}.ppl".format(os.path.basename(taggedInput[1:-1]), ngramOrder)
+                                                                       # strip the quotes from the taggedInput filename
+                                                                       # so that os.path.basename works correctly
 
             command = "\"{0}ngram\" -order {1} -lm {2} -ppl {3} -debug 1 -unk> {4}".format(srilmBinary, ngramOrder,
                                                                                            langModel, taggedInput, pplFile)
