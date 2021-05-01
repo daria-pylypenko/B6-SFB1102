@@ -91,6 +91,67 @@ class Lang_model_features(Feature_extractor):
                 output = sparse.lil_matrix(probab)
                 return output
 
+    @featid(71)
+    def backwardLangModelFeat(self, argString, preprocessReq=0):
+        '''
+        Extracts a backward n-gram Language Model preplexity features.
+        '''
+        #print("langModelFeat")
+        ngramOrder = 3
+        langModel = 0
+        # Binary1/0,ngramOrder,LMFilePath(ifBinary1)
+        arguments = argString.split(',')
+        if(int(arguments[0])):
+            # Use given langModel
+            langModel = "\"{0}\"".format(arguments[-1])
+
+        ngramOrder = int(arguments[1])
+
+        if preprocessReq:
+            #print("preprocessReq")
+            # Request all preprocessing functions to be prepared
+            if not langModel:
+                langModel = self.preprocessor.buildBackwardLanguageModel(ngramOrder)
+            self.preprocessor.getInputFileName()
+            self.preprocessor.getBinariesPath()
+            return 1
+
+        sentsFile = self.preprocessor.getInputFileName()
+        srilmBinary, kenlm = self.preprocessor.getBinariesPath()
+
+        if not langModel:
+            langModel = self.preprocessor.buildBackwardLanguageModel(ngramOrder)
+
+        if srilmBinary and not kenlm:
+            pplFile = "tempLang{0}_reversed_{1}.ppl".format(os.path.basename(sentsFile), ngramOrder)
+            command = "\"{0}ngram\" -order {1} -lm {2} -ppl {3} -debug 1 -unk -reverse > {4}".format(srilmBinary, ngramOrder,
+                                                                                         langModel, sentsFile, pplFile)
+
+            #print(command)
+            subprocess.call(command, shell=True)
+            probab = self.extractValues(pplFile, self.preprocessor.getSentCount())
+            os.remove(pplFile)
+            return sparse.lil_matrix(probab)
+        else:
+            try:
+                __import__('imp').find_module('kenlm')
+                import kenlm
+                model = kenlm.Model(langModel)
+                probab = []
+                for sent in self.preprocessor.getPlainSentences():
+                    probab.append([model.score(sent, bos=True, eos=True),
+                                   model.perplexity(sent)])
+                output = sparse.lil_matrix(probab)
+                return output
+            except ImportError:
+                import pynlpl.lm.lm as pineApple
+                arpaLM = pineApple.ARPALanguageModel(langModel)
+                probab = []
+                for sent in self.preprocessor.gettokenizeSents():
+                    probab.append([arpaLM.score(sent)])
+                output = sparse.lil_matrix(probab)
+                return output
+
     @featid(18)
     def langModelPOSFeat(self, argString, preprocessReq=0):
         '''
