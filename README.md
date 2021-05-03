@@ -1,3 +1,13 @@
+This project is forked from [rrubino/B6-SFB1102](https://github.com/rrubino/B6-SFB1102).
+
+*Release 1.0*:
+
+* Added backward language modelling features.
+* Enabled use of a single predefined train-val-test split.
+
+Below is the README of the original project:
+
+---
 
 # INFODENS
 
