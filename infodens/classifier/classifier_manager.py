@@ -13,7 +13,9 @@ from infodens.classifier.classifier import Classifier
 
 class Classifier_manager:
 
-    def __init__(self, ids, dSet, labs, threads=1, cv_folds=1):
+    def __init__(self, ids, dSet, labs, threads=1, cv_folds=1,
+                         modelInput="", modelOutput="", train_size=0,
+                         val_size=0, random_state=None):
         self.classifierIDs = ids
         self.dataSet = dSet
         self.labels = labs
@@ -22,6 +24,11 @@ class Classifier_manager:
         self.classifyModules = []
         self.cv_folds = cv_folds
         self.threadsCount = threads
+        self.modelInput = modelInput
+        self.modelOutput = modelOutput
+        self.train_size = train_size
+        self.val_size = val_size
+        self.random_state = random_state
         self.returnClassifiers()
 
     def checkValidClassifier(self):
@@ -58,7 +65,9 @@ class Classifier_manager:
                     break
             classModule = importlib.import_module("infodens.classifier."+module)
             class_ = getattr(classModule, classif)
-            classifierObjs.append(class_(self.dataSet, self.labels, self.threadsCount, self.cv_folds))
+            classifierObjs.append(class_(self.dataSet, self.labels, self.threadsCount,
+                                              self.cv_folds, self.modelInput, self.modelOutput,
+                                              self.train_size, self.val_size, self.random_state))
 
         classifReports = []
         for classif in classifierObjs:
