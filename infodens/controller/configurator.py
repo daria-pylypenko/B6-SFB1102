@@ -11,7 +11,10 @@ class Configurator:
         self.classifiersList = []
         self.inputFile = ""
         self.classifReport = ""
+        self.modelInput = ""
+        self.modelOutput = ""
         self.corpusLM = ""
+        self.featInput = ""
         self.featOutput = ""
         self.featOutFormat = ""
         self.threadsCount = 1
@@ -19,6 +22,9 @@ class Configurator:
         self.srilmBinPath = ""
         self.kenlmBinPath = ""
         self.cv_folds = 1
+        self.train_size = 0
+        self.val_size = 0
+        self.random_state = None # for the classifier
 
     def parseOutputLine(self, line):
         status = 1
@@ -141,6 +147,58 @@ class Configurator:
                 else:
                     statusOK = 0
                     print("Number of folds is not a positive integer.")
+            elif "input features" in configLine: # Load extracted feature matrix from file
+                startInp = configLine.index(':')
+                configLine = configLine[startInp + 1:]
+                configLine = configLine.strip().split()
+                self.featInput = configLine[0]
+            elif "load model" in configLine: # Load trained model from file
+                startInp = configLine.index(':')
+                configLine = configLine[startInp + 1:]
+                configLine = configLine.strip().split()
+                self.modelInput = configLine[0]
+            elif "save model" in configLine: # Load trained model from file
+                startInp = configLine.index(':')
+                configLine = configLine[startInp + 1:]
+                configLine = configLine.strip().split()
+                self.modelOutput = configLine[0]
+            elif "train size" in configLine:
+                startInp = configLine.index(':')
+                configLine = configLine[startInp + 1:]
+                configLine = configLine.strip().split()
+                if configLine[0].isdigit():
+                    train_size = int(configLine[0])
+                    if train_size > 0:
+                        self.train_size = train_size
+                    else:
+                        statusOK = 0
+                        print("Train size is not a positive integer.")
+                else:
+                    statusOK = 0
+                    print("Train size is not a positive integer.")
+            elif "val size" in configLine:
+                startInp = configLine.index(':')
+                configLine = configLine[startInp + 1:]
+                configLine = configLine.strip().split()
+                if configLine[0].isdigit():
+                    val_size = int(configLine[0])
+                    if val_size > 0:
+                        self.val_size = val_size
+                    else:
+                        statusOK = 0
+                        print("Val size is not a positive integer.")
+                else:
+                    statusOK = 0
+                    print("Val size is not a positive integer.")
+            elif "random state" in configLine:
+                startInp = configLine.index(':')
+                configLine = configLine[startInp + 1:]
+                configLine = configLine.strip().split()
+                if configLine[0].isdigit():
+                    self.random_state = int(configLine[0])
+                else:
+                    statusOK = 0
+                    print("Random state is not an integer.")
             else:
                 params = str(configLine).split(' ', 1)
                 if len(params) == 2 or len(params) == 1:
