@@ -2,10 +2,14 @@ This project is forked from [rrubino/B6-SFB1102](https://github.com/rrubino/B6-S
 
 *Release 1.0*:
 
-* Added backward language modelling features.
-* Enabled use of a single predefined train-val-test split.
+Used in:
 
-**Below is the README of the original project:**
+Kwabena Amponsah-Kaakyire, Daria Pylypenko, Cristina España-Bonet, and Josef van Genabith. 2021. Do not rely on relay translations: Multilingual parallel direct europarl. In *23rd Nordic Conference on Computational Linguistics. Workshop on Modelling Translation: Translatology in the Digital Age (MoTra-2021), May 31-June 2, Virtual, Iceland*, Linköping Electronic Conference Proceedings, pages 1–7. Association for Computational Linguistics.
+
+* Added backward language modelling features.
+* Enabled use of a single predefined train-val-test split (for the SVC linear classifier).
+
+**Below is the README of the original project, with some modifications:**
 
 ---
 
@@ -100,7 +104,9 @@ Ngram bag of POS | 5 | Ngram bag of POS | Example: 1,2 or 1,2,1,c:\taggedInput.t
 Ngram bag of mixed words | 6 | Ngram bag of mixed words, sentences are tagged and only tags that start with J,N,V, or R are left, the others are actual words (Tagged with NLTK) | Example: 1,2 (Uni-grams that appear at least twice)  <li> N in ngram </li> <li> Cutoff frequency </li> <li> Tagged POS input (Optional) </li>
 Ngram bag of lemmas | 7 | Ngram bag of lemmas (lemmatized using NLTK WordNetLemmatizer) | Example: 1,2 (Uni-grams that appear at least twice) <li> N in ngram </li> <li> Cutoff frequency </li> <li> Tagged POS input (Optional) </li>
 Perplexity language model | 17 | Using SRILM's ngram or KenLM to build a language model then compute the sentence scores (log probabilities) and perplexities. | Example: 0,3 (Trigrams language model) or 1,3,models\myLM.lm <li> Flag (0/1) Given language model </li> <li> Ngram of the LM and feature </li> <li> Language model file path (if flag is 1) </li>
+Perplexity language model (backward) | 71 | Using SRILM's ngram or KenLM to build a *backward* language model then compute the sentence scores (log probabilities) and perplexities. | Example: 0,3 (Trigrams language model) or 1,3,models\myLM.lm <li> Flag (0/1) Given language model </li> <li> Ngram of the LM and feature </li> <li> Language model file path (if flag is 1) </li>
 Perplexity language model POS | 18 | Using SRILM's ngram or KenLM to build a language model then compute the sentence scores (log probabilities) and perplexities for POS tagged sentences | Example: 0,1,0,3,models\myLM.lm <li> Tagged input flag (1/0) </li> <li> Given LM flag (0/1) </li> <li> Given tagged Corpus flag (0/1) </li> <li> Ngram order of model and feature </li> <li> Tagged POS file path (if Tagged inp. flag) </li> <li> LM file Path (if LM flag) </li> <li> Tagged Corpus path (if no LM flag but Tagged Corpus flag) </li>
+Perplexity language model POS (backward) | 81 | Using SRILM's ngram or KenLM to build a *backward* language model then compute the sentence scores (log probabilities) and perplexities for POS tagged sentences | Example: 0,1,0,3,models\myLM.lm <li> Tagged input flag (1/0) </li> <li> Given LM flag (0/1) </li> <li> Given tagged Corpus flag (0/1) </li> <li> Ngram order of model and feature </li> <li> Tagged POS file path (if Tagged inp. flag) </li> <li> LM file Path (if LM flag) </li> <li> Tagged Corpus path (if no LM flag but Tagged Corpus flag) </li>
 Surprisal log probability | 20 | Using SRILM's ngram or KenLM to build a language model then compute the sentence scores in units of bits (log2 probabilities) and perplexities. | Example: 0,3 (Trigrams language model) or 1,3,models\myLM.lm <li> Flag (0/1) Given language model </li> <li> Ngram of the LM and feature </li> <li> Language model file path (if flag is 1) </li>
 Surprisal POS log probability | 21 | Using SRILM's ngram or KenLM to build a language model then compute the sentence scores in units of bits (log2 probabilities) and perplexities for POS tagged sentences | Example: 0,1,0,3,models\myLM.lm <li> Tagged input flag (1/0) </li> <li> Given LM flag (0/1) </li> <li> Given tagged Corpus flag (0/1) </li> <li> Ngram order of model and feature </li> <li> Tagged POS file path (if Tagged inp. flag) </li> <li> LM file Path (if LM flag) </li> <li> Tagged Corpus path (if no LM flag but Tagged Corpus flag) </li>
 Ngram frequency quantile distribution | 19 | Models the input sequence as a frequency distribution over quantiles | Example: 1,1,4 <li> N in ngram </li> <li> Cutoff frequency </li> <li> Number of quantiles </li>
