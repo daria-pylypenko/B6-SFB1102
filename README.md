@@ -29,7 +29,7 @@ The toolkit takes a configuration file as an input in which all the required par
 To run it:
 
 ```
-python infodens.py democonfig.txt
+python infodens.py config.txt
 ```
 
 The mandatory parameters for the config file are:
