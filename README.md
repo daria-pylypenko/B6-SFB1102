@@ -1,10 +1,12 @@
-This project is forked from [rrubino/B6-SFB1102](https://github.com/rrubino/B6-SFB1102).
+This project is forked from [rrubino/B6-SFB1102](https://github.com/rrubino/B6-SFB1102), which corresponds to the INFODENS toolkit (Taie et al., 2018). 
+
+This repository (as well as the original INFODENS toolkit) is part of the B6 project of SFB1102 -- http://www.sfb1102.uni-saarland.de
+
+We add the following modifications:
 
 *Release 1.0*:
 
-Used in:
-
-Kwabena Amponsah-Kaakyire, Daria Pylypenko, Cristina España-Bonet, and Josef van Genabith. 2021. Do not rely on relay translations: Multilingual parallel direct europarl. In *23rd Nordic Conference on Computational Linguistics. Workshop on Modelling Translation: Translatology in the Digital Age (MoTra-2021), May 31-June 2, Virtual, Iceland*, Linköping Electronic Conference Proceedings, pages 1–7. Association for Computational Linguistics.
+Used in (Amponsah-Kaakyire et al., 2021).
 
 * Added backward language modelling features.
 * Enabled use of a single predefined train-val-test split (for the SVC linear classifier).
@@ -20,6 +22,11 @@ Kwabena Amponsah-Kaakyire, Daria Pylypenko, Cristina España-Bonet, and Josef va
 * Other minor changes.
 
 \*Only for SVC linear.
+
+## References
+
+* Ahmad Taie, Raphael Rubino, and Josef van Genabith. 2018. INFODENS: An Open-source Framework for Learning Text Representations. *arXiv preprint arXiv:1810.07091*
+* Kwabena Amponsah-Kaakyire, Daria Pylypenko, Cristina España-Bonet, and Josef van Genabith. 2021. Do not rely on relay translations: Multilingual parallel direct europarl. In *23rd Nordic Conference on Computational Linguistics. Workshop on Modelling Translation: Translatology in the Digital Age (MoTra-2021), May 31-June 2, Virtual, Iceland*, Linköping Electronic Conference Proceedings, pages 1–7. Association for Computational Linguistics.
 
 **Below is the README of the original project, with some modifications:**
 
