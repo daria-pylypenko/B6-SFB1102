@@ -73,6 +73,14 @@ class Surface_features(Feature_extractor):
             return 1
 
         vowels = ['a', 'e', 'i', 'o', 'u']
+        vowels = vowels + ['ä', 'ë', "ï", 'ö', 'ü', 'ÿ',\
+                           'á', 'é', 'í', 'ó', 'ú', 'ý',\
+                           'à', 'è', 'ì', 'ò', 'ù', 'ỳ',\
+                           'â', 'ê', 'î', 'ô', 'û', 'ŷ',\
+                           'ã', 'ẽ', 'ĩ', 'õ', 'ũ', 'ỹ',\
+                           'α', 'ε', 'η', 'ι', 'ο', 'υ', 'ω']
+
+
         sylRatios = sparse.lil_matrix((self.preprocessor.getSentCount(), 1))
         j = 0
         for sentence in self.preprocessor.gettokenizeSents():
