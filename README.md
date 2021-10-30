@@ -23,7 +23,7 @@ Used in (Amponsah-Kaakyire et al., 2021).
 
 \*Only for SVC linear.
 
-## References
+### References
 
 * Ahmad Taie, Raphael Rubino, and Josef van Genabith. 2018. INFODENS: An Open-source Framework for Learning Text Representations. *arXiv preprint arXiv:1810.07091*
 * Kwabena Amponsah-Kaakyire, Daria Pylypenko, Cristina España-Bonet, and Josef van Genabith. 2021. Do not rely on relay translations: Multilingual parallel direct europarl. In *23rd Nordic Conference on Computational Linguistics. Workshop on Modelling Translation: Translatology in the Digital Age (MoTra-2021), May 31-June 2, Virtual, Iceland*, Linköping Electronic Conference Proceedings, pages 1–7. Association for Computational Linguistics.
