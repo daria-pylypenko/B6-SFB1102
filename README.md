@@ -9,6 +9,18 @@ Kwabena Amponsah-Kaakyire, Daria Pylypenko, Cristina España-Bonet, and Josef va
 * Added backward language modelling features.
 * Enabled use of a single predefined train-val-test split (for the SVC linear classifier).
 
+*Release 2.0*:
+
+* Enabled saving/loading the trained model.\*
+* Enabled loading saved features.
+* Enabled passing the train and dev sizes to config.\*
+* Enabled passing the random seed for training the classifier to config.\*
+* Addded more vowels to the syllable ratio feature.
+* Added a sample config file.
+* Other minor changes.
+
+\*Only for SVC linear.
+
 **Below is the README of the original project, with some modifications:**
 
 ---
