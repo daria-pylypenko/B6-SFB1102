@@ -1,0 +1,90 @@
+# Use to train the models (srilm).
+# Here we specify the input files, text and classes
+input file : train_dev_test_tokenized.txt
+input classes: train_dev_test.cls
+
+# We also specify a corpus for building LMs or Embeddings
+training corpus: train_tokenized.txt
+
+# Take care on linux of the slash!
+
+# And here comes the features with their IDs
+# average word length
+1
+# syllable ratio (average number of syllables per word)
+2
+# sentence length
+10
+# Lexical density
+3 1,ADJ,NOUN,VERB,ADV,PROPN,train_dev_test_postagged.txt
+# Lexical richness (type-token ratio)
+11
+# N-gram bag of pos: n, cutoff, 0/1 pos provided, pos file
+5 1,1,1,train_dev_test_postagged.txt
+# SRILM language model for sentence log probs and perplexities
+17 0,1
+17 0,2
+17 0,3
+17 0,4
+17 0,5
+# SRILM backward language model for sentence log probs and perplexities
+71 0,1
+71 0,2
+71 0,3
+71 0,4
+71 0,5
+# Same for POS: forward
+18 1,0,1,1,train_dev_test_postagged.txt,train_postagged.txt
+18 1,0,1,2,train_dev_test_postagged.txt,train_postagged.txt
+18 1,0,1,3,train_dev_test_postagged.txt,train_postagged.txt
+18 1,0,1,4,train_dev_test_postagged.txt,train_postagged.txt
+18 1,0,1,5,train_dev_test_postagged.txt,train_postagged.txt
+# And backward
+81 1,0,1,1,train_dev_test_postagged.txt,train_postagged.txt
+81 1,0,1,2,train_dev_test_postagged.txt,train_postagged.txt
+81 1,0,1,3,train_dev_test_postagged.txt,train_postagged.txt
+81 1,0,1,4,train_dev_test_postagged.txt,train_postagged.txt
+81 1,0,1,5,train_dev_test_postagged.txt,train_postagged.txt
+# Ngram frequency quantile distribution
+19 1,1,4
+19 2,1,4
+19 3,1,4
+19 4,1,4
+19 5,1,4
+
+# We also have some parameters
+srilm path : srilm/bin/i686-m64
+operating language : eng
+threads : 1
+folds : 1
+
+# Hier haben wir die Classifiers
+#classifiers : Decision_tree Random_forest Ada_boost Ensemble SVC_rbf SVC_linear
+classifiers : SVC_linear
+
+#Specify the outputs
+output classifier: report1.txt
+
+# Output as libsvm or arff
+output features: feats.txt libsvm
+
+# Load the features from file
+input features: feats.txt
+
+# Load the model from file
+load model: model.joblib
+
+# Save the model
+save model: model.joblib
+
+# Train size (length of the training set)
+train size: 29520
+
+# Val size (length of the validation set)
+val size: 6326
+
+# Classifier random state:
+random state: 0
+
+
+
