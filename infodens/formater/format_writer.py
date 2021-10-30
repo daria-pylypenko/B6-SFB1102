@@ -23,7 +23,7 @@ class Format_writer:
         numpy.savetxt(theFile, data.todense(), delimiter=',', fmt='%1.6g')
 
     def libsvmwriteToFile(self, X, Y, theFile):
-        sklearn.datasets.dump_svmlight_file(X, Y, theFile, zero_based=False)
+        sklearn.datasets.dump_svmlight_file(X, Y, theFile)
 
     def arffwriteToFile(self, X, Y, theFile):
         #TODO: Fix warning
