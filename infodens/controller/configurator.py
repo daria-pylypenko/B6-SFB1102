@@ -31,9 +31,9 @@ class Configurator:
         startInp = line.index(':')
         outputLine = line[startInp + 1:]
         outputLine = outputLine.strip().split()
-        if "classif" in line and not self.classifReport:
+        if line.startswith("output classifier") and not self.classifReport:
             self.classifReport = outputLine[0]
-        elif "feat" in line and not self.featOutput:
+        elif line.startswith("output features") and not self.featOutput:
             if len(outputLine) == 2:
                 self.featOutput = outputLine[0]
                 self.featOutFormat = outputLine[1]
@@ -62,7 +62,7 @@ class Configurator:
             elif configLine[0] is '#':
                 # Line is comment
                 continue
-            elif "input file" in configLine:
+            elif configLine.startswith("input file"):
                 # Extract input file
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
@@ -70,7 +70,7 @@ class Configurator:
                 self.inputFile = configLine[0]
                 print("Input file: ")
                 print(self.inputFile)
-            elif "input class" in configLine:
+            elif configLine.startswith("input classes"):
                 # Extract input classes file
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
@@ -78,19 +78,19 @@ class Configurator:
                 self.inputClasses = configLine[0]
                 #print("Input classes: ")
                 #print(self.inputClasses)
-            elif "output" in configLine:
+            elif configLine.startswith("output"):
                 statusOK = self.parseOutputLine(configLine)
-            elif "classif" in configLine:
+            elif configLine.startswith("classif"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
                 self.classifiersList = configLine
-            elif "training corpus" in configLine:
+            elif configLine.startswith("training corpus"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
                 self.corpusLM = configLine[0]
-            elif "SRILM" in configLine or "srilm" in configLine:
+            elif configLine.startswith("SRILM") or configLine.startswith("srilm"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip()
@@ -100,7 +100,7 @@ class Configurator:
                     print("Invalid SRILM binaries path.")
                 else:
                     self.srilmBinPath = os.path.join(self.srilmBinPath, '')
-            elif "kenlm" in configLine:
+            elif configLine.startswith("kenlm"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip()
@@ -110,13 +110,13 @@ class Configurator:
                     print("Invalid KenLm binaries path.")
                 else:
                     self.kenlmBinPath = os.path.join(self.kenlmBinPath, '')
-            elif "operating language" in configLine:
+            elif configLine.startswith("operating language"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
                 self.language = configLine
                 #print(self.language)
-            elif "thread" in configLine:
+            elif configLine.startswith("thread"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
@@ -132,7 +132,7 @@ class Configurator:
                 else:
                     statusOK = 0
                     print("Number of threads is not a positive integer.")
-            elif "fold" in configLine:
+            elif configLine.startswith("fold"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
@@ -147,22 +147,22 @@ class Configurator:
                 else:
                     statusOK = 0
                     print("Number of folds is not a positive integer.")
-            elif "input features" in configLine: # Load extracted feature matrix from file
+            elif configLine.startswith("input features"): # Load extracted feature matrix from file
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
                 self.featInput = configLine[0]
-            elif "load model" in configLine: # Load trained model from file
+            elif configLine.startswith("load model"): # Load trained model from file
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
                 self.modelInput = configLine[0]
-            elif "save model" in configLine: # Load trained model from file
+            elif configLine.startswith("save model"): # Load trained model from file
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
                 self.modelOutput = configLine[0]
-            elif "train size" in configLine:
+            elif configLine.startswith("train size"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
@@ -176,7 +176,7 @@ class Configurator:
                 else:
                     statusOK = 0
                     print("Train size is not a positive integer.")
-            elif "val size" in configLine:
+            elif configLine.startswith("val size"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
@@ -190,7 +190,7 @@ class Configurator:
                 else:
                     statusOK = 0
                     print("Val size is not a positive integer.")
-            elif "random state" in configLine:
+            elif configLine.startswith("random state"):
                 startInp = configLine.index(':')
                 configLine = configLine[startInp + 1:]
                 configLine = configLine.strip().split()
