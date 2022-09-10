@@ -11,12 +11,18 @@ import infodens.feature_extractor.feature_extractor as feat_extr
 def runFeatureMethod(mtdCls, featureID,
                      preprocessor,featureName, featureArgs, preprocessReq=0):
     """ Run the given feature extractor. """
+    print("Extracting feature {}".format(featureID))
     instance = mtdCls(preprocessor)
     methd = getattr(instance, featureName)
     feat = methd(featureArgs, preprocessReq)
     feateX = "Extracted feature: " + str(featureID) + " - " + str(featureName)
     if not preprocessReq:
         print(feateX)
+    print(featureID)
+    if type(feat) != int:
+        print(feat.shape)
+    else:
+        print(feat)
     return feat
 
 
