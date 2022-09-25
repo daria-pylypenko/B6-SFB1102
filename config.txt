@@ -19,8 +19,8 @@ training corpus: train_tokenized.txt
 3 1,ADJ,NOUN,VERB,ADV,PROPN,train_dev_test_postagged.txt
 # Lexical richness (type-token ratio)
 11
-# N-gram bag of pos: n, cutoff, 0/1 pos provided, pos file
-5 1,1,1,train_dev_test_postagged.txt
+# N-gram bag of pos: n, cutoff, 0/1 pos provided, 0/1 ngrams dict provided, pos file, ngrams dict
+5 1,1,1,1,train_dev_test_postagged.txt,universal_postags_unigrams.txt
 # SRILM language model for sentence log probs and perplexities
 17 0,1
 17 0,2

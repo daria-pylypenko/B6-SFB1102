@@ -4,6 +4,8 @@ Created on Sun Sep 04 14:12:49 2016
 
 @author: admin
 """
+import ast
+
 from .feature_extractor import featid, Feature_extractor
 from collections import Counter
 from nltk import ngrams
@@ -16,7 +18,8 @@ class Bag_of_ngrams_features(Feature_extractor):
         status = 1
         n = 0
         freq = 0
-        filePOS = 0
+        filePOS = 0 # input file
+        ngrams_dict = 0 # predefined list of ngrams
 
         argStringList = argString.split(',')
         if argStringList[0].isdigit():
@@ -31,21 +34,23 @@ class Bag_of_ngrams_features(Feature_extractor):
                 print('Error: frequency should be an integer')
                 status = 0
             #POS file
-            if type is "POS" and len(argStringList) > 2:
+            if type == "POS":
                 if int(argStringList[2]):
-                    filePOS = argStringList[3]
+                    filePOS = argStringList[4]
+                if int(argStringList[3]):
+                    ngrams_file = argStringList[4+int(argStringList[2])]
         else:
             freq = 1
-        return status, n, freq, filePOS
+        return status, n, freq, filePOS, ngrams_file
 
     def preprocessReqHandle(self, type, filePOS):
-        if type is "plain":
+        if type == "plain":
             listOfSentences = self.preprocessor.gettokenizeSents()
-        elif type is "POS":
+        elif type == "POS":
             listOfSentences = self.preprocessor.getPOStagged(filePOS)
-        elif type is "lemma":
+        elif type == "lemma":
             listOfSentences = self.preprocessor.getLemmatizedSents()
-        elif type is "mixed":
+        elif type == "mixed":
             listOfSentences = self.preprocessor.getMixedSents()
         else:
             #Assume plain
@@ -54,7 +59,7 @@ class Bag_of_ngrams_features(Feature_extractor):
         return 1
 
     def ngramExtraction(self, type, argString, preprocessReq):
-        status, n, freq, filePOS = self.ngramArgumentCheck(argString, type)
+        status, n, freq, filePOS, ngrams_file = self.ngramArgumentCheck(argString, type)
         if not status:
             # Error in argument.
             return
@@ -64,25 +69,44 @@ class Bag_of_ngrams_features(Feature_extractor):
             self.preprocessReqHandle(type, filePOS)
             return 1
 
-        if type is "plain":
+        if type == "plain":
             listOfSentences = self.preprocessor.gettokenizeSents()
-        elif type is "POS":
+        elif type == "POS":
             listOfSentences = self.preprocessor.getPOStagged(filePOS)
-        elif type is "lemma":
+        elif type == "lemma":
             listOfSentences = self.preprocessor.getLemmatizedSents()
-        elif type is "mixed":
+        elif type == "mixed":
             listOfSentences = self.preprocessor.getMixedSents()
         else:
             #Assume plain
             listOfSentences = self.preprocessor.gettokenizeSents()
 
-        finNgram, numberOfFeatures = self.preprocessor.prep_servs.buildNgrams(n, freq, listOfSentences)
+
+
+        if ngrams_file: # read in a predefined list of ngrams
+            with open(ngrams_file) as f:
+                ngrams_str = f.read()
+            ngrams_dict = ast.literal_eval(ngrams_str)
+            #print(ngrams_dict)
+            finNgram = ngrams_dict
+            numberOfFeatures = len(finNgram)
+        else:
+            print("Building ngrams...")
+            finNgram, numberOfFeatures = self.preprocessor.prep_servs.buildNgrams(
+                                   n, freq, listOfSentences, pad_sentences=pad_sentences,
+                                   ngram_type=type)
+
+
 
         print("Ngrams built.")
 
         if numberOfFeatures == 0:
             print("Cut-off too high, no ngrams passed it.")
             return []
+
+
+
+        print(len(finNgram), numberOfFeatures)
 
         ngramFeatures = sparse.lil_matrix((len(listOfSentences), numberOfFeatures))
 
